@@ -16,28 +16,28 @@ import java.nio.charset.StandardCharsets;
  * @author  ZxyKira
  */
 public class YamlManager<T> {
-    private Yaml loadYaml;
-    private Yaml dumpYaml;
+    private final Yaml loadYaml;
+    private final Yaml dumpYaml;
 
-    public final Load<T> load = new Load<T>() {
-        @Override
-        protected Yaml getLoadYaml() {
-            return YamlManager.this.loadYaml;
-        }
-    };
-    public final Dump<T> dump = new Dump<T>() {
-        @Override
-        protected Yaml getDumpYaml() {
-            return YamlManager.this.dumpYaml;
-        }
-    };
+    /**
+     * 建構子，不指定Class類，以Map輸出
+     *
+     */
+    public YamlManager(){
+        final DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        options.setPrettyFlow(true);
+
+        this.loadYaml = new Yaml();
+        this.dumpYaml = new Yaml(options);
+    }
 
     /**
      * 建構子
      *
      * @param theRoot 目標結構本體, 如Object.class.
      */
-    public YamlManager(Class<? extends Object> theRoot){
+    public YamlManager(Class<?> theRoot){
         final DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setPrettyFlow(true);
@@ -52,7 +52,7 @@ public class YamlManager<T> {
      * @param theRoot 目標結構本體, 如Object.class
      * @param classLoader Class母體.
      */
-    public YamlManager(Class<? extends Object> theRoot, ClassLoader classLoader){
+    public YamlManager(Class<?> theRoot, ClassLoader classLoader){
         final DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setPrettyFlow(true);
@@ -61,50 +61,42 @@ public class YamlManager<T> {
         this.dumpYaml = new Yaml(options);
     }
 
-    public static abstract class Load<T>{
-        protected abstract Yaml getLoadYaml();
-
-        /**
-         * 從YAML字串載入至目標結構.
-         *
-         * @param fileManager 原始來源資料.
-         * @return 目標結構.
-         * @throws IOException 結構格式錯誤.
-         */
-        public T asFileManager(FileManager fileManager) throws IOException {
-            return asString(fileManager.read.asString(StandardCharsets.UTF_8));
-        }
-
-        /**
-         * 從YAML字串載入至目標結構.
-         *
-         * @param source 原始來源資料.
-         * @return 目標結構.
-         * @throws IOException 結構格式錯誤.
-         */
-        public T asString(String source) throws IOException {
-            T result;
-            try{
-                result = this.getLoadYaml().load(source);
-            }catch (YAMLException e){
-                throw new IOException(e);
-            }
-            return result;
-        }
+    /**
+     * 從YAML字串載入至目標結構.
+     *
+     * @param fileManager 原始來源資料.
+     * @return 目標結構.
+     * @throws IOException 結構格式錯誤.
+     */
+    public T load(FileManager fileManager) throws IOException {
+        return load(fileManager.read.asString(StandardCharsets.UTF_8));
     }
 
-    public static abstract class Dump<T>{
-        protected abstract Yaml getDumpYaml();
-
-        /**
-         * 將結構輸出為YAML字串
-         *
-         * @param object 目標結構0
-         * @return YAML字串.
-         */
-        public String asString(T object){
-            return this.getDumpYaml().dumpAs(object, Tag.MAP, null);
+    /**
+     * 從YAML字串載入至目標結構.
+     *
+     * @param source 原始來源資料.
+     * @return 目標結構.
+     * @throws IOException 結構格式錯誤.
+     */
+    public T load(String source) throws IOException {
+        T result;
+        try{
+            result = this.loadYaml.load(source);
+        }catch (YAMLException e){
+            throw new IOException(e);
         }
+        return result;
+    }
+
+    /**
+     * 將結構輸出為YAML字串
+     *
+     * @param object 目標結構0
+     * @return YAML字串.
+     */
+    public String dump(T object){
+        return this.dumpYaml.dumpAs(object, Tag.MAP, null);
     }
 
 }

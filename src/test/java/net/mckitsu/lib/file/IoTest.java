@@ -43,7 +43,7 @@ public class IoTest {
         try {
             ResourceManager file = new ResourceManager(ClassLoader.getSystemClassLoader(), "",  "config.yml");
             YamlManager<Config> loadYaml = new YamlManager<>(Config.class);
-            Config config = loadYaml.load.asFileManager(file);
+            Config config = loadYaml.load(file);
             System.out.println(config);
 
         } catch (URISyntaxException | IOException e) {

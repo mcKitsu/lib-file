@@ -1,0 +1,5 @@
+network:
+  hostAddress: 127.0.0.1
+  port: 8888
+  cryptoKey: 1862482544D7C5512FB3CE31E8CD5
+  verifyKey: KITSU

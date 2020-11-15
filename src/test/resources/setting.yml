@@ -1,0 +1,23 @@
+global:
+  -
+    color: "c"
+    description: "Global channel"
+    prefix: "#"
+  -
+    color: "6"
+    description: "Trading channel"
+    prefix: "$"
+party:
+  -
+    color: "7"
+    description: "Guild channel"
+    prefix: "&"
+  -
+    color: "9"
+    description: "Party team channel"
+    prefix: "%"
+cipher:
+    senderColor: "d"
+    receiverColor: "5"
+    prefix: "@"
+    description: "Cipher message"

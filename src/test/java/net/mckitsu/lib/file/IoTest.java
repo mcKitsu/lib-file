@@ -27,7 +27,7 @@ public class IoTest {
         try {
             ResourceManager cfg =
                     new ResourceManager(ClassLoader.getSystemClassLoader(), "",  "config.yml");
-            System.out.println(cfg.read.asString(StandardCharsets.UTF_8));
+            System.out.println(cfg.readAsString(StandardCharsets.UTF_8));
         } catch (URISyntaxException e) {
             e.printStackTrace();
             System.out.format("Test failed %s\n", ResourceManager.class.getName());

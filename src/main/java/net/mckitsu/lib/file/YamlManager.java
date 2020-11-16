@@ -69,7 +69,7 @@ public class YamlManager<T> {
      * @throws IOException 結構格式錯誤.
      */
     public T load(FileManager fileManager) throws IOException {
-        return load(fileManager.read.asString(StandardCharsets.UTF_8));
+        return load(fileManager.readAsString(StandardCharsets.UTF_8));
     }
 
     /**

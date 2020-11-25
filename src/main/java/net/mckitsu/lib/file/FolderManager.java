@@ -12,7 +12,7 @@ import java.nio.file.Paths;
  * @author  ZxyKira
  */
 public class FolderManager {
-    private Path dirPath;
+    private final Path dirPath;
 
     public FolderManager(String dirPath){
         this.dirPath = Paths.get(dirPath);
@@ -29,7 +29,7 @@ public class FolderManager {
      */
     public String[] list(){
         try {
-            Path cache[] = Files.list(this.dirPath).toArray(Path[]::new);
+            Path[] cache = Files.list(this.dirPath).toArray(Path[]::new);
             String[] result = new String[cache.length];
 
             for(int i=0; i<cache.length; i++){
@@ -44,13 +44,23 @@ public class FolderManager {
         }
     }
 
+    public FileManager[] getFiles(){
+        String[] list = this.list();
+        FileManager[] result = new FileManager[list.length];
+
+        for(int i=0; i<list.length; i++)
+            result[i] = new FileManager(this, list[i]);
+
+        return result;
+    }
+
     /**
      * 建立所有不存在的父目錄.
      * @return true建立成功; false建立失敗或已存在.
      */
     public boolean createDir(){
         try {
-            Path result = Files.createDirectories(this.dirPath);
+            Files.createDirectories(this.dirPath);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
